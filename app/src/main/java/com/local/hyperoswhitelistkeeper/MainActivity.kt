@@ -55,6 +55,7 @@ class MainActivity : ComponentActivity() {
                     state = state,
                     events = viewModel.events,
                     onToggleEntry = viewModel::setSelected,
+                    onAddCustomApp = viewModel::addCustomApp,
                     onApply = viewModel::onApplyClicked,
                     onCycleTheme = viewModel::cycleTheme,
                     onCycleLanguage = viewModel::cycleLanguage,

@@ -13,8 +13,8 @@ android {
         // Compatibility mode used by SetEdit. Android blocks private/non-public
         // System settings for apps targeting API 23+, even with WRITE_SETTINGS.
         targetSdk = 22
-        versionCode = 5
-        versionName = "1.4.0-legacy"
+        versionCode = 6
+        versionName = "1.5.0-legacy"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

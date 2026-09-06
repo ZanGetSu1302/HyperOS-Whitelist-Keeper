@@ -1,6 +1,7 @@
 package com.local.hyperoswhitelistkeeper.data
 
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import com.local.hyperoswhitelistkeeper.model.AppEntry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -77,6 +78,24 @@ class PreferencesRepositoryTest {
         val language = PreferencesRepository(dataStore).appLanguage.first()
 
         assertEquals(AppLanguage.VI, language)
+        scope.cancel()
+    }
+
+    @Test
+    fun `custom apps survive save and reload`() = runBlocking {
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        val file = File(temporaryFolder.root, "custom-apps.preferences_pb")
+        val dataStore = PreferenceDataStoreFactory.create(
+            scope = scope,
+            produceFile = { file },
+        )
+        val saved = AppEntry("vn.example.bank", "Ngân hàng mẫu")
+        val repository = PreferencesRepository(dataStore)
+
+        repository.saveCustomApp(saved)
+        val reloaded = PreferencesRepository(dataStore).customApps.first()
+
+        assertEquals(listOf(saved), reloaded)
         scope.cancel()
     }
 }

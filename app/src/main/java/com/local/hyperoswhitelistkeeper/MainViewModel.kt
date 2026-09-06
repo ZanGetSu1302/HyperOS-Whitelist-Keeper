@@ -68,8 +68,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         viewModelScope.launch {
-            val entries = AppCatalog.resolveEntries(application)
-            _uiState.update { it.copy(entries = entries) }
+            val builtInEntries = AppCatalog.resolveEntries(application)
+            val builtInIds = builtInEntries.mapTo(hashSetOf(), AppEntry::id)
+            preferencesRepository.customApps.collect { customEntries ->
+                val entries = builtInEntries + customEntries.filterNot { it.id in builtInIds }
+                _uiState.update { it.copy(entries = entries) }
+            }
         }
         viewModelScope.launch {
             for (selection in selectionSaves) {
@@ -84,6 +88,32 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }.toSet()
         _uiState.update { it.copy(selectedPackages = updated) }
         selectionSaves.trySend(updated)
+    }
+
+    fun addCustomApp(packageName: String, appName: String) {
+        val normalizedPackage = packageName.trim()
+        val normalizedName = appName.trim()
+        val current = _uiState.value
+        if (
+            normalizedName.isBlank() ||
+            !AppCatalog.isValidPackageName(normalizedPackage) ||
+            normalizedPackage in AppCatalog.ids ||
+            current.entries.any { it.id == normalizedPackage }
+        ) {
+            return
+        }
+
+        val entry = AppEntry(id = normalizedPackage, label = normalizedName)
+        val updatedSelection = current.selectedPackages + normalizedPackage
+        _uiState.update {
+            it.copy(
+                entries = it.entries + entry,
+                selectedPackages = updatedSelection,
+            )
+        }
+        selectionSaves.trySend(updatedSelection)
+        viewModelScope.launch { preferencesRepository.saveCustomApp(entry) }
+        refreshActivationStatuses()
     }
 
     fun cycleTheme() {
@@ -124,10 +154,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         activationRefreshJob?.cancel()
         activationRefreshJob = viewModelScope.launch {
             _uiState.update { it.copy(isCheckingActivation = true) }
+            val entryIds = (AppCatalog.ids + _uiState.value.entries.map(AppEntry::id)).distinct()
             val statuses = runCatching {
-                whitelistRepository.activationStatuses(AppCatalog.ids)
+                whitelistRepository.activationStatuses(entryIds)
             }.getOrElse {
-                AppCatalog.ids.associateWith { false }
+                entryIds.associateWith { false }
             }
             _uiState.update {
                 it.copy(

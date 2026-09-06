@@ -7,9 +7,9 @@ Thời điểm kiểm thử: 2026-09-06 (Asia/Saigon).
 | Hạng mục | Kết quả | Bằng chứng |
 |---|---|---|
 | Gradle build Debug + Release | PASS | `clean test lintDebug assembleDebug lintRelease assembleRelease`: `BUILD SUCCESSFUL` |
-| Unit tests | PASS | 15 test, 0 failure, 0 error, 0 skipped |
+| Unit tests | PASS | 20 test, 0 failure, 0 error, 0 skipped |
 | Android Lint | PASS | 0 error; 11 cảnh báo dependency/khuyến nghị không chặn build |
-| APK metadata | PASS | package `com.local.hyperoswhitelistkeeper`; minSdk 26; compileSdk 36; targetSdk 22; version `1.4.0-legacy` (5) |
+| APK metadata | PASS | package `com.local.hyperoswhitelistkeeper`; minSdk 26; compileSdk 36; targetSdk 22; version `1.5.0-legacy` (6) |
 | APK release signature | PASS | APK Signature Scheme v2 = true; v3 = true |
 | Android 16 release install/launch | PASS | Cài bằng `--bypass-low-target-sdk-block`; `Status: ok` |
 | Sống sau 5 giây | PASS | PID release vẫn tồn tại sau 5 giây |
@@ -59,6 +59,16 @@ Thiết bị: Xiaomi `25102RKBEC` (`myron`), Android 16, HyperOS OS3.0.
 - Kiểm thử trên APK Release Android 16: `MAIN_EN=true`, `PICKER_EN=true`,
   `EN_PERSISTED=true`, `EN_SNACKBAR=true`; PID vẫn tồn tại sau 5 giây.
 
+## Thêm ứng dụng thủ công
+
+- Nút **+ Thêm ứng dụng / + Add app** nằm ngay dưới ô tìm kiếm trong app picker.
+- Dialog có đủ Tên Package, Tên App, Lưu và Hủy bằng cả tiếng Việt/Anh.
+- Package sai định dạng hoặc trùng bị báo lỗi và khóa nút Lưu.
+- App mới được lưu bằng DataStore, tự tick và vẫn tồn tại sau force-stop/mở lại.
+- Kiểm thử APK Release Android 16: tổng lựa chọn tăng từ 8 lên 9; package
+  `com.example.customkeeper` được ghi vào đủ ba whitelist package và trạng thái
+  chuyển từ đỏ **Chưa kích hoạt** sang xanh **Đã kích hoạt** sau khi Apply.
+
 ## Hướng dẫn nhanh
 
 - Nút dấu hỏi nằm cạnh nút ngôn ngữ và theme; mỗi nút giữ vùng chạm khoảng 48dp.
@@ -86,9 +96,9 @@ không xóa các giá trị whitelist trong `Settings.System`.
 debug certificate vì workspace không có keystore production. `app-release-unsigned.apk`
 cần được ký lại bằng keystore do chủ ứng dụng quản lý trước khi phân phối chính thức.
 
-- `app-debug.apk`: 12.079.356 byte; SHA-256
-  `0CA01EE0F82A9EF226235F3244795D41EED15AA251C6A67EFBF4BAECABC96666`.
-- `app-release-qa-signed.apk`: 8.236.247 byte; SHA-256
-  `C11ED0651EABD086DA2A354FB68E2838B2B2DFF6E9216419C7AF88DB86EE4102`.
-- `app-release-unsigned.apk`: 8.217.544 byte; SHA-256
-  `13B4B10CB3118F318DB493713FDB00DCCE4AEBA520326AF54091166322342CA7`.
+- `app-debug.apk`: 12.178.172 byte; SHA-256
+  `111EA02AD43282DCD3A24DDB703DD3B328D29DB3431EFB538AA353AC92FE9140`.
+- `app-release-qa-signed.apk`: 8.252.631 byte; SHA-256
+  `19FE12944EF8C43ABB0003C862182321C1B4ABC220372946F4E81DC961ACF9C3`.
+- `app-release-unsigned.apk`: 8.233.928 byte; SHA-256
+  `CBED0108FB2FB902431C9681E0B33264129895917C3FC864FE846899E65C6989`.

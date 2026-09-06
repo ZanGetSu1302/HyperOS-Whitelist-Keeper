@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.local.hyperoswhitelistkeeper.model.AppEntry
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -53,6 +54,14 @@ class PreferencesRepository internal constructor(
             ?: AppLanguage.VI
     }
 
+    val customApps: Flow<List<AppEntry>> = dataStore.data.map { preferences ->
+        preferences[CUSTOM_APPS]
+            .orEmpty()
+            .mapNotNull(CustomAppCodec::decode)
+            .distinctBy(AppEntry::id)
+            .sortedBy { it.label.lowercase() }
+    }
+
     suspend fun loadSelectedPackages(): Set<String> = selectedPackages.first()
 
     suspend fun saveSelectedPackages(packages: Set<String>) {
@@ -73,9 +82,22 @@ class PreferencesRepository internal constructor(
         }
     }
 
+    suspend fun saveCustomApp(entry: AppEntry) {
+        dataStore.edit { preferences ->
+            val entriesById = preferences[CUSTOM_APPS]
+                .orEmpty()
+                .mapNotNull(CustomAppCodec::decode)
+                .associateByTo(linkedMapOf(), AppEntry::id)
+            entriesById[entry.id] = entry
+            preferences[CUSTOM_APPS] = entriesById.values
+                .mapTo(linkedSetOf(), CustomAppCodec::encode)
+        }
+    }
+
     private companion object {
         val SELECTED_PACKAGES = stringSetPreferencesKey("selected_packages")
         val THEME_MODE = stringPreferencesKey("theme_mode")
         val APP_LANGUAGE = stringPreferencesKey("app_language")
+        val CUSTOM_APPS = stringSetPreferencesKey("custom_apps")
     }
 }

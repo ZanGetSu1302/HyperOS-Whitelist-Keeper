@@ -16,7 +16,8 @@ trạng thái kích hoạt khi mở ứng dụng.
 
 1. Cài **Carrier Services** từ CH Play.
 2. Bật **Tự khởi động (Auto Start)** cho các ứng dụng cần thiết.
-3. Mở Whitelist Keeper và tick các ứng dụng cần bảo vệ.
+3. Mở Whitelist Keeper và tick các ứng dụng cần bảo vệ. Có thể nhấn **+ Thêm ứng dụng**
+   để nhập thủ công Tên Package và Tên App chưa có trong danh sách.
 4. Nhấn **Áp dụng whitelist**. Trạng thái xanh **Đã kích hoạt** là hoàn tất.
 
 Nút `EN/VN`, trợ giúp `?` và đổi giao diện sáng/tối nằm trên thanh trên cùng.
@@ -27,7 +28,8 @@ whitelist; hãy nhấn **Áp dụng whitelist** lần nữa.
 
 1. Install **Carrier Services** from Google Play.
 2. Enable **Auto Start** for the required apps.
-3. Select the apps you want to protect.
+3. Select the apps you want to protect. Use **+ Add app** to enter an app name and
+   package name manually when it is not already listed.
 4. Tap **Apply whitelist**. Green **Activated** means setup is complete.
 
 ## Cài đặt APK
@@ -55,7 +57,7 @@ ghi trong `Settings.System`.
 - Minimum SDK: 26
 - Compile SDK: 36 (Android 16)
 - Target SDK: 22 (chế độ tương thích SetEdit)
-- Version: `1.4.0-legacy` (`versionCode 5`)
+- Version: `1.5.0-legacy` (`versionCode 6`)
 - Jetpack Compose Material 3, DataStore và WorkManager
 
 `targetSdk 22` là chủ ý kỹ thuật: Android chặn ứng dụng target API 23+ sửa một

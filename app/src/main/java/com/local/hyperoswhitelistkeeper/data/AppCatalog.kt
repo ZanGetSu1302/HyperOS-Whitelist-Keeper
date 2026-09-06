@@ -162,6 +162,9 @@ object AppCatalog {
     fun typeOf(id: String): EntryType =
         if (id == PERSISTENT_PROCESS) EntryType.PROCESS else EntryType.PACKAGE
 
+    fun isValidPackageName(value: String): Boolean =
+        PACKAGE_NAME_PATTERN.matches(value.trim())
+
     suspend fun resolveEntries(context: Context): List<AppEntry> = withContext(Dispatchers.IO) {
         val packageManager = context.packageManager
         ids.map { id ->
@@ -185,4 +188,7 @@ object AppCatalog {
         } catch (_: SecurityException) {
             null
         }
+
+    private val PACKAGE_NAME_PATTERN =
+        Regex("^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)+$")
 }
