@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <queries>
+        <package android:name="app.revanced.android.gms" />
+        <package android:name="com.google.android.gms" />
+        <package android:name="com.google.android.gsf" />
+        <package android:name="com.google.android.gsf.login" />
+        <package android:name="com.google.android.syncadapters.contacts" />
+        <package android:name="com.google.android.syncadapters.calendar" />
+        <package android:name="com.xiaomi.xmsf" />
+        <package android:name="com.xiaomi.xmsfkeeper" />
+        <package android:name="com.agribank.emobile" />
+        <package android:name="com.google.android.projection.gearhead" />
+        <package android:name="com.vnpay.bidv" />
+        <package android:name="com.android.chrome" />
+        <package android:name="com.chrome.beta" />
+        <package android:name="com.discord" />
+        <package android:name="com.facebook.katana" />
+        <package android:name="com.fptplay" />
+        <package android:name="com.google.android.gm" />
+        <package android:name="com.google.android.gm.lite" />
+        <package android:name="com.grabtaxi.passenger" />
+        <package android:name="com.grabtaxi.passenger.lite" />
+        <package android:name="com.lazada.android" />
+        <package android:name="jp.naver.line.android" />
+        <package android:name="com.mbbank.mbbank" />
+        <package android:name="com.mbmobile" />
+        <package android:name="com.facebook.orca" />
+        <package android:name="com.mservice.momotransfer" />
+        <package android:name="com.microsoft.office.outlook" />
+        <package android:name="com.microsoft.outlooklite" />
+        <package android:name="com.microsoft.office.outlook.beta" />
+        <package android:name="com.microsoft.teams" />
+        <package android:name="com.microsoft.teams.lite" />
+        <package android:name="com.microsoft.teams.beta" />
+        <package android:name="com.shb.SHBMBanking" />
+        <package android:name="com.shopee.vn" />
+        <package android:name="com.shopee.lite" />
+        <package android:name="com.skype.raider" />
+        <package android:name="vn.com.techcombank.bb.app" />
+        <package android:name="org.telegram.messenger" />
+        <package android:name="com.zhiliaoapp.musically" />
+        <package android:name="com.tpb.mb.gprsandroid" />
+        <package android:name="com.vcb" />
+        <package android:name="com.vietinbank.ipay" />
+        <package android:name="com.bplus.vtpay" />
+        <package android:name="com.vib.myvib" />
+        <package android:name="com.viber.voip" />
+        <package android:name="com.zing.zalo.pc" />
+        <package android:name="org.thunderdog.challegram" />
+        <package android:name="com.vnpay.app" />
+        <package android:name="vn.com.vpbank.mobile" />
+        <package android:name="com.vtvgo" />
+        <package android:name="com.tencent.mm" />
+        <package android:name="com.whatsapp" />
+        <package android:name="com.whatsapp.w4b" />
+        <package android:name="com.google.android.youtube" />
+        <package android:name="com.google.android.apps.youtube.mango" />
+        <package android:name="com.zing.zalo" />
+        <package android:name="com.zing.zalo.lite" />
+        <package android:name="com.instagram.android" />
+        <package android:name="com.twitter.android" />
+        <package android:name="com.linkedin.android" />
+        <package android:name="com.google.android.apps.photos" />
+        <package android:name="com.google.android.ext.services" />
+        <package android:name="com.huawei.health" />
+        <package android:name="com.mi.health" />
+    </queries>
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.HyperOSWhitelistKeeper">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

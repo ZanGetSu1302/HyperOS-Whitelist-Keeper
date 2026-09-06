@@ -1,0 +1,111 @@
+package com.local.hyperoswhitelistkeeper.ui
+
+import com.local.hyperoswhitelistkeeper.data.AppLanguage
+import com.local.hyperoswhitelistkeeper.data.ThemeMode
+
+data class UiStrings(
+    val protectedApps: String,
+    val selectedApps: (Int) -> String,
+    val automaticRepair: String,
+    val applying: String,
+    val applyWhitelist: String,
+    val chooseApps: String,
+    val done: String,
+    val searchHint: String,
+    val selectedHeader: String,
+    val otherAppsHeader: String,
+    val noAppsFound: String,
+    val checking: String,
+    val activated: String,
+    val notActivated: String,
+    val updating: String,
+    val updateSuccess: String,
+    val alreadyApplied: String,
+    val permissionRequired: String,
+    val updateFailure: String,
+    val themeDescription: (ThemeMode) -> String,
+    val languageButton: String,
+    val languageDescription: String,
+    val guideTitle: String,
+    val guideBody: String,
+    val guideClose: String,
+    val guideDescription: String,
+)
+
+fun uiStrings(language: AppLanguage): UiStrings = when (language) {
+    AppLanguage.VI -> UiStrings(
+        protectedApps = "Ứng dụng được bảo vệ",
+        selectedApps = { count -> "$count ứng dụng đã chọn" },
+        automaticRepair = "Tự động khôi phục whitelist",
+        applying = "Đang áp dụng…",
+        applyWhitelist = "Áp dụng whitelist",
+        chooseApps = "Chọn ứng dụng",
+        done = "Xong",
+        searchHint = "Tìm kiếm ứng dụng...",
+        selectedHeader = "ĐÃ CHỌN",
+        otherAppsHeader = "ỨNG DỤNG KHÁC",
+        noAppsFound = "Không tìm thấy ứng dụng",
+        checking = "Đang kiểm tra…",
+        activated = "Đã kích hoạt",
+        notActivated = "Chưa kích hoạt",
+        updating = "Đang cập nhật whitelist…",
+        updateSuccess = "Đã cập nhật whitelist",
+        alreadyApplied = "Whitelist đã được cập nhật trước đó",
+        permissionRequired = "Cần quyền sửa cài đặt hệ thống",
+        updateFailure = "Không thể cập nhật whitelist",
+        themeDescription = { mode ->
+            when (mode) {
+                ThemeMode.SYSTEM -> "Giao diện theo hệ thống. Nhấn để chuyển sang sáng"
+                ThemeMode.LIGHT -> "Giao diện sáng. Nhấn để chuyển sang tối"
+                ThemeMode.DARK -> "Giao diện tối. Nhấn để theo hệ thống"
+            }
+        },
+        languageButton = "EN",
+        languageDescription = "Switch to English",
+        guideTitle = "Hướng dẫn nhanh",
+        guideBody = "1. Cài Carrier Services từ CH Play.\n" +
+            "2. Bật Tự khởi động (Auto Start) cho các app cần thiết.\n" +
+            "3. Tick các app cần bảo vệ.\n" +
+            "4. Nhấn Áp dụng; trạng thái xanh là xong.",
+        guideClose = "Đã hiểu",
+        guideDescription = "Mở hướng dẫn sử dụng",
+    )
+
+    AppLanguage.EN -> UiStrings(
+        protectedApps = "Protected apps",
+        selectedApps = { count -> if (count == 1) "1 app selected" else "$count apps selected" },
+        automaticRepair = "Automatically restore whitelist",
+        applying = "Applying…",
+        applyWhitelist = "Apply whitelist",
+        chooseApps = "Choose apps",
+        done = "Done",
+        searchHint = "Search apps...",
+        selectedHeader = "SELECTED",
+        otherAppsHeader = "OTHER APPS",
+        noAppsFound = "No apps found",
+        checking = "Checking…",
+        activated = "Activated",
+        notActivated = "Not activated",
+        updating = "Updating whitelist…",
+        updateSuccess = "Whitelist updated",
+        alreadyApplied = "Whitelist was already up to date",
+        permissionRequired = "Permission to modify system settings is required",
+        updateFailure = "Unable to update whitelist",
+        themeDescription = { mode ->
+            when (mode) {
+                ThemeMode.SYSTEM -> "System theme. Tap to switch to light"
+                ThemeMode.LIGHT -> "Light theme. Tap to switch to dark"
+                ThemeMode.DARK -> "Dark theme. Tap to follow system"
+            }
+        },
+        languageButton = "VN",
+        languageDescription = "Chuyển sang tiếng Việt",
+        guideTitle = "Quick guide",
+        guideBody = "1. Install Carrier Services from Google Play.\n" +
+            "2. Enable Auto Start for the required apps.\n" +
+            "3. Select the apps to protect.\n" +
+            "4. Tap Apply; green means activated.",
+        guideClose = "Got it",
+        guideDescription = "Open the quick guide",
+    )
+}
