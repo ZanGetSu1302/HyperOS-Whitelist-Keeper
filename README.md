@@ -2,7 +2,7 @@
 
 ## Buy me a coffee ☕
 
-Nếu ứng dụng hữu ích, bạn có thể ủng hộ tác giả qua VietQR. Cảm ơn bạn!
+Nếu ứng dụng hữu ích, bạn có thể ủng hộ tác giả. Cảm ơn bạn!
 
 <p align="center">
   <img src="docs/assets/buy-me-a-coffee-vietqr.png" alt="Buy me a coffee via VietQR" width="240">
