@@ -21,6 +21,7 @@ trạng thái kích hoạt khi mở ứng dụng.
 4. Nhấn **Áp dụng whitelist**. Trạng thái xanh **Đã kích hoạt** là hoàn tất.
 
 Nút `EN/VN`, trợ giúp `?` và đổi giao diện sáng/tối nằm trên thanh trên cùng.
+Nút hình trái tim mở nhanh mã QR Donate trong một cửa sổ chỉ hiển thị QR.
 Trạng thái đỏ **Chưa kích hoạt** nghĩa là ứng dụng còn thiếu trong ít nhất một
 whitelist; hãy nhấn **Áp dụng whitelist** lần nữa.
 
@@ -31,6 +32,8 @@ whitelist; hãy nhấn **Áp dụng whitelist** lần nữa.
 3. Select the apps you want to protect. Use **+ Add app** to enter an app name and
    package name manually when it is not already listed.
 4. Tap **Apply whitelist**. Green **Activated** means setup is complete.
+
+The heart button in the top bar opens a minimal dialog containing only the Donate QR.
 
 ## Cài đặt APK
 
@@ -57,7 +60,7 @@ ghi trong `Settings.System`.
 - Minimum SDK: 26
 - Compile SDK: 36 (Android 16)
 - Target SDK: 22 (chế độ tương thích SetEdit)
-- Version: `1.5.0-legacy` (`versionCode 6`)
+- Version: `1.6.0-legacy` (`versionCode 7`)
 - Jetpack Compose Material 3, DataStore và WorkManager
 
 `targetSdk 22` là chủ ý kỹ thuật: Android chặn ứng dụng target API 23+ sửa một

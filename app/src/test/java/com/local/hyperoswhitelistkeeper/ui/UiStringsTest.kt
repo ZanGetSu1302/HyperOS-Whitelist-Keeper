@@ -20,4 +20,10 @@ class UiStringsTest {
         assertTrue(guide.startsWith("1. Install Carrier Services"))
         assertTrue(guide.contains("2. Enable Auto Start"))
     }
+
+    @Test
+    fun `Donate button has localized accessibility labels`() {
+        assertTrue(uiStrings(AppLanguage.VI).donateDescription.contains("QR Donate"))
+        assertTrue(uiStrings(AppLanguage.EN).donateDescription.contains("Donate QR"))
+    }
 }

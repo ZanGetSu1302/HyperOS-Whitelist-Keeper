@@ -34,6 +34,7 @@ data class UiStrings(
     val themeDescription: (ThemeMode) -> String,
     val languageButton: String,
     val languageDescription: String,
+    val donateDescription: String,
     val guideTitle: String,
     val guideBody: String,
     val guideClose: String,
@@ -78,6 +79,7 @@ fun uiStrings(language: AppLanguage): UiStrings = when (language) {
         },
         languageButton = "EN",
         languageDescription = "Switch to English",
+        donateDescription = "Mở mã QR Donate",
         guideTitle = "Hướng dẫn nhanh",
         guideBody = "1. Cài Carrier Services từ CH Play.\n" +
             "2. Bật Tự khởi động (Auto Start) cho các app cần thiết.\n" +
@@ -124,6 +126,7 @@ fun uiStrings(language: AppLanguage): UiStrings = when (language) {
         },
         languageButton = "VN",
         languageDescription = "Chuyển sang tiếng Việt",
+        donateDescription = "Open Donate QR code",
         guideTitle = "Quick guide",
         guideBody = "1. Install Carrier Services from Google Play.\n" +
             "2. Enable Auto Start for the required apps.\n" +

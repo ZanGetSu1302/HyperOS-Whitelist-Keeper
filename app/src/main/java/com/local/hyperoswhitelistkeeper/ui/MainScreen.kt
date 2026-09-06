@@ -1,11 +1,13 @@
 package com.local.hyperoswhitelistkeeper.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,10 +43,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.local.hyperoswhitelistkeeper.MainUiEvent
 import com.local.hyperoswhitelistkeeper.MainUiState
 import com.local.hyperoswhitelistkeeper.R
@@ -65,6 +69,7 @@ fun MainScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     var showPicker by remember { mutableStateOf(false) }
     var showGuide by remember { mutableStateOf(false) }
+    var showDonate by remember { mutableStateOf(false) }
     val strings = uiStrings(state.language)
 
     LaunchedEffect(events) {
@@ -100,6 +105,13 @@ fun MainScreen(
                         Text(
                             text = strings.languageButton,
                             fontWeight = FontWeight.Bold,
+                        )
+                    }
+                    IconButton(onClick = { showDonate = true }) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_donate),
+                            contentDescription = strings.donateDescription,
+                            tint = MaterialTheme.colorScheme.primary,
                         )
                     }
                     IconButton(onClick = { showGuide = true }) {
@@ -176,6 +188,20 @@ fun MainScreen(
             onAddCustomApp = onAddCustomApp,
             onDismiss = { showPicker = false },
         )
+    }
+
+    if (showDonate) {
+        Dialog(onDismissRequest = { showDonate = false }) {
+            Image(
+                painter = painterResource(R.drawable.buy_me_a_coffee_vietqr),
+                contentDescription = strings.donateDescription,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(708f / 959f)
+                    .clip(RoundedCornerShape(24.dp)),
+            )
+        }
     }
 
     if (showGuide) {
