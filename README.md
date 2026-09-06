@@ -1,5 +1,13 @@
 # HyperOS Whitelist Keeper
 
+## Buy me a coffee ☕
+
+Nếu ứng dụng hữu ích, bạn có thể ủng hộ tác giả qua VietQR. Cảm ơn bạn!
+
+<p align="center">
+  <img src="docs/assets/buy-me-a-coffee-vietqr.png" alt="Buy me a coffee via VietQR" width="240">
+</p>
+
 Ứng dụng không cần root giúp giữ các ứng dụng đã chọn trong whitelist hệ thống
 của Xiaomi HyperOS. Hỗ trợ giao diện tiếng Việt/Anh, Light/Dark và tự kiểm tra
 trạng thái kích hoạt khi mở ứng dụng.
@@ -41,14 +49,6 @@ adb install --bypass-low-target-sdk-block app-release-qa-signed.apk
 Việc gỡ ứng dụng chỉ xóa lựa chọn/theme/ngôn ngữ nội bộ, không xóa whitelist đã
 ghi trong `Settings.System`.
 
-## Buy me a coffee ☕
-
-Nếu ứng dụng hữu ích, bạn có thể ủng hộ tác giả qua VietQR. Cảm ơn bạn!
-
-<p align="center">
-  <img src="docs/assets/buy-me-a-coffee-vietqr.png" alt="Buy me a coffee via VietQR" width="360">
-</p>
-
 ## Cấu hình kỹ thuật
 
 - Application ID: `com.local.hyperoswhitelistkeeper`
@@ -77,4 +77,3 @@ trùng lặp. Package được kiểm tra trong ba whitelist package;
 APK Debug nằm tại `app/build/outputs/apk/debug/app-debug.apk`. APK Release do
 Gradle tạo ra là unsigned; cần ký bằng keystore của chủ ứng dụng trước khi phát
 hành. `artifacts/app-release-qa-signed.apk` chỉ dùng certificate debug để cài thử.
-
