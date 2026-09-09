@@ -7,9 +7,9 @@ Thời điểm kiểm thử: 2026-09-06 (Asia/Saigon).
 | Hạng mục | Kết quả | Bằng chứng |
 |---|---|---|
 | Gradle build Debug + Release | PASS | `clean test lintDebug assembleDebug lintRelease assembleRelease`: `BUILD SUCCESSFUL` |
-| Unit tests | PASS | 20 test, 0 failure, 0 error, 0 skipped |
+| Unit tests | PASS | 28 test, 0 failure, 0 error, 0 skipped |
 | Android Lint | PASS | 0 error; 11 cảnh báo dependency/khuyến nghị không chặn build |
-| APK metadata | PASS | package `com.local.hyperoswhitelistkeeper`; minSdk 26; compileSdk 36; targetSdk 22; version `1.5.0-legacy` (6) |
+| APK metadata | PASS | package `com.local.hyperoswhitelistkeeper`; minSdk 26; compileSdk 36; targetSdk 22; version `1.7.0-legacy` (8) |
 | APK release signature | PASS | APK Signature Scheme v2 = true; v3 = true |
 | Android 16 release install/launch | PASS | Cài bằng `--bypass-low-target-sdk-block`; `Status: ok` |
 | Sống sau 5 giây | PASS | PID release vẫn tồn tại sau 5 giây |
@@ -36,7 +36,7 @@ Thiết bị: Xiaomi `25102RKBEC` (`myron`), Android 16, HyperOS OS3.0.
 | Route process | PASS | `com.google.android.gms.persistent` chỉ nằm trong `power_proc_white_list` |
 | Apply lặp lại | PASS | Không ghi lại; UI báo “Whitelist đã được cập nhật trước đó” |
 | Khôi phục thủ công mục bị xóa | PASS | Xóa thử GMS khỏi MILLET, nhấn Apply thêm lại và verify thành công |
-| WorkManager định kỳ | PASS (lịch) | Job 15 phút có `batteryNotLow=true`; Android quyết định thời điểm chạy thực tế |
+| AlarmManager exact | PASS | Hai alarm `window=0` tại 08:00 và 12:00 giờ local; không nhân đôi sau khi mở lại app |
 
 ## Trạng thái kích hoạt trong app picker
 
@@ -72,11 +72,31 @@ Thiết bị: Xiaomi `25102RKBEC` (`myron`), Android 16, HyperOS OS3.0.
 ## Hướng dẫn nhanh
 
 - Nút dấu hỏi nằm cạnh nút ngôn ngữ và theme; mỗi nút giữ vùng chạm khoảng 48dp.
-- Top App Bar chuyển sang căn trái để ba nút không chồng tiêu đề trên 360dp.
+- Top App Bar căn trái; bốn điều khiển ngôn ngữ/Donate/trợ giúp/theme không chồng
+  tiêu đề trên 360dp.
 - AlertDialog VN/EN hiển thị đúng 4 bước ngắn; hai bước đầu là cài Carrier
   Services và bật Auto Start cho các ứng dụng cần thiết.
 - Kiểm thử APK Release Android 16: `GUIDE_VI=true`, `GUIDE_EN=true`; dialog không
   tràn, nút đóng hiển thị đầy đủ và nền vẫn đúng Light/Dark.
+
+## Run on Boot và Scheduled Run
+
+- Hai checkbox nằm sau card danh sách ứng dụng và trước nút Apply; trạng thái được
+  lưu bằng DataStore và còn nguyên sau force-stop/cập nhật APK.
+- `BootReceiver` nhận BOOT_COMPLETED, gọi trực tiếp logic repair hiện có một lần
+  khi Run on Boot bật, sau đó đăng ký lại hai alarm.
+- Reboot thật máy ảo Android 16: package bị xóa thử khỏi whitelist được phục hồi;
+  hai alarm exact xuất hiện lại tại 08:00 và 12:00, không crash.
+- `AlarmReceiver` được gọi dưới UID ứng dụng: package bị xóa được phục hồi, receiver
+  kết thúc và vẫn còn đúng hai alarm kế tiếp.
+- Nếu giờ trong ngày đã qua, lịch chuyển sang ngày hôm sau. Unit test bao phủ trước
+  08:00, đúng 08:00 và khoảng giữa 08:00–12:00.
+- Khi Scheduled Run tắt, hai alarm bị hủy; bật lại chỉ tạo đúng hai PendingIntent
+  cố định. Android 12+ kiểm tra `canScheduleExactAlarms()` và mở trang cấp quyền
+  Báo thức & lời nhắc nếu cần.
+- BOOT_COMPLETED, TIME_SET, TIMEZONE_CHANGED, MY_PACKAGE_REPLACED và thay đổi quyền
+  exact alarm đều duy trì lại lịch theo giờ local. Không có foreground service hay
+  notification do tính năng này tạo ra.
 
 ## Lưu ý cài đặt
 
@@ -96,9 +116,9 @@ không xóa các giá trị whitelist trong `Settings.System`.
 debug certificate vì workspace không có keystore production. `app-release-unsigned.apk`
 cần được ký lại bằng keystore do chủ ứng dụng quản lý trước khi phân phối chính thức.
 
-- `app-debug.apk`: 12.178.172 byte; SHA-256
-  `111EA02AD43282DCD3A24DDB703DD3B328D29DB3431EFB538AA353AC92FE9140`.
-- `app-release-qa-signed.apk`: 8.252.631 byte; SHA-256
-  `19FE12944EF8C43ABB0003C862182321C1B4ABC220372946F4E81DC961ACF9C3`.
-- `app-release-unsigned.apk`: 8.233.928 byte; SHA-256
-  `CBED0108FB2FB902431C9681E0B33264129895917C3FC864FE846899E65C6989`.
+- `app-debug.apk`: 12.505.937 byte; SHA-256
+  `7771C62DC774938F2A7CDE167158E675C7E3C6230B1015639CEB02BD244BF592`.
+- `app-release-qa-signed.apk`: 8.576.327 byte; SHA-256
+  `0D64505651AC90A9CC2CCD8B395829B7C550CEB52E4CB99653E8A1066781A6B2`.
+- `app-release-unsigned.apk`: 8.557.788 byte; SHA-256
+  `CA89BB75DD46AB7493DA63A1B5A6B2665C9AFE6BC3353954BC63A37D3378E6F0`.

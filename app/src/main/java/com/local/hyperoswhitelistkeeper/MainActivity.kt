@@ -1,6 +1,7 @@
 package com.local.hyperoswhitelistkeeper
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
@@ -28,21 +29,45 @@ class MainActivity : ComponentActivity() {
         viewModel.onWriteSettingsResult()
     }
 
+    private val exactAlarmLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult(),
+    ) {
+        viewModel.onExactAlarmPermissionResult()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        WhitelistWorker.schedule(applicationContext)
+        WhitelistWorker.cancelLegacySchedule(applicationContext)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.events.collect { event ->
-                    if (event == MainUiEvent.RequestWriteSettings) {
-                        val intent = Intent(
-                            Settings.ACTION_MANAGE_WRITE_SETTINGS,
-                            "package:$packageName".toUri(),
-                        )
-                        runCatching { writeSettingsLauncher.launch(intent) }
-                            .onFailure { viewModel.onPermissionLaunchFailed() }
+                    when (event) {
+                        is MainUiEvent.ShowSnackbar -> Unit
+                        MainUiEvent.RequestWriteSettings -> {
+                            val intent = Intent(
+                                Settings.ACTION_MANAGE_WRITE_SETTINGS,
+                                "package:$packageName".toUri(),
+                            )
+                            runCatching { writeSettingsLauncher.launch(intent) }
+                                .onFailure { viewModel.onPermissionLaunchFailed() }
+                        }
+
+                        MainUiEvent.RequestExactAlarmPermission -> {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                val intent = Intent(
+                                    Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                                    "package:$packageName".toUri(),
+                                )
+                                runCatching { exactAlarmLauncher.launch(intent) }
+                                    .onFailure {
+                                        viewModel.onExactAlarmPermissionLaunchFailed()
+                                    }
+                            } else {
+                                viewModel.onExactAlarmPermissionResult()
+                            }
+                        }
                     }
                 }
             }
@@ -59,6 +84,8 @@ class MainActivity : ComponentActivity() {
                     onApply = viewModel::onApplyClicked,
                     onCycleTheme = viewModel::cycleTheme,
                     onCycleLanguage = viewModel::cycleLanguage,
+                    onRunOnBootChanged = viewModel::setRunOnBootEnabled,
+                    onScheduledRunChanged = viewModel::setScheduledRunEnabled,
                 )
             }
         }
@@ -67,5 +94,6 @@ class MainActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         viewModel.refreshActivationStatuses()
+        viewModel.ensureScheduledAlarms()
     }
 }

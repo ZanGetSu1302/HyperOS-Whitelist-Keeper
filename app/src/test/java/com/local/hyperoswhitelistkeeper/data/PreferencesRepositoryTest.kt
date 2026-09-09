@@ -98,4 +98,51 @@ class PreferencesRepositoryTest {
         assertEquals(listOf(saved), reloaded)
         scope.cancel()
     }
+
+    @Test
+    fun `automation options default to disabled`() = runBlocking {
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        val file = File(temporaryFolder.root, "automation-defaults.preferences_pb")
+        val dataStore = PreferenceDataStoreFactory.create(
+            scope = scope,
+            produceFile = { file },
+        )
+        val repository = PreferencesRepository(dataStore)
+
+        assertEquals(false, repository.runOnBootEnabled.first())
+        assertEquals(false, repository.scheduledRunEnabled.first())
+        scope.cancel()
+    }
+
+    @Test
+    fun `run on boot option survives save and reload`() = runBlocking {
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        val file = File(temporaryFolder.root, "run-on-boot.preferences_pb")
+        val dataStore = PreferenceDataStoreFactory.create(
+            scope = scope,
+            produceFile = { file },
+        )
+        val repository = PreferencesRepository(dataStore)
+
+        repository.saveRunOnBootEnabled(true)
+
+        assertEquals(true, PreferencesRepository(dataStore).runOnBootEnabled.first())
+        scope.cancel()
+    }
+
+    @Test
+    fun `scheduled run option survives save and reload`() = runBlocking {
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        val file = File(temporaryFolder.root, "scheduled-run.preferences_pb")
+        val dataStore = PreferenceDataStoreFactory.create(
+            scope = scope,
+            produceFile = { file },
+        )
+        val repository = PreferencesRepository(dataStore)
+
+        repository.saveScheduledRunEnabled(true)
+
+        assertEquals(true, PreferencesRepository(dataStore).scheduledRunEnabled.first())
+        scope.cancel()
+    }
 }

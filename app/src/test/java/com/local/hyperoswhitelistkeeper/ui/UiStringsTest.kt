@@ -26,4 +26,15 @@ class UiStringsTest {
         assertTrue(uiStrings(AppLanguage.VI).donateDescription.contains("QR Donate"))
         assertTrue(uiStrings(AppLanguage.EN).donateDescription.contains("Donate QR"))
     }
+
+    @Test
+    fun `Automation options mention boot and exact schedule in both languages`() {
+        val vi = uiStrings(AppLanguage.VI)
+        val en = uiStrings(AppLanguage.EN)
+
+        assertTrue(vi.runOnBoot.contains("khởi động"))
+        assertTrue(vi.scheduledRunDescription.contains("08:00") && vi.scheduledRunDescription.contains("12:00"))
+        assertTrue(en.runOnBoot.contains("boot"))
+        assertTrue(en.scheduledRunDescription.contains("08:00") && en.scheduledRunDescription.contains("12:00"))
+    }
 }

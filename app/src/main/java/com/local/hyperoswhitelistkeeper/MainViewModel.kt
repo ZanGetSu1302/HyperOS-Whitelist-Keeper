@@ -3,6 +3,7 @@ package com.local.hyperoswhitelistkeeper
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.local.hyperoswhitelistkeeper.automation.DailyAlarmScheduler
 import com.local.hyperoswhitelistkeeper.data.AppCatalog
 import com.local.hyperoswhitelistkeeper.data.AppLanguage
 import com.local.hyperoswhitelistkeeper.data.PreferencesRepository
@@ -31,11 +32,14 @@ data class MainUiState(
     val isApplying: Boolean = false,
     val activationById: Map<String, Boolean> = emptyMap(),
     val isCheckingActivation: Boolean = true,
+    val runOnBootEnabled: Boolean = false,
+    val scheduledRunEnabled: Boolean = false,
 )
 
 sealed interface MainUiEvent {
     data class ShowSnackbar(val message: String) : MainUiEvent
     data object RequestWriteSettings : MainUiEvent
+    data object RequestExactAlarmPermission : MainUiEvent
 }
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
@@ -65,6 +69,21 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             preferencesRepository.appLanguage.collect { language ->
                 _uiState.update { it.copy(language = language) }
+            }
+        }
+        viewModelScope.launch {
+            preferencesRepository.runOnBootEnabled.collect { enabled ->
+                _uiState.update { it.copy(runOnBootEnabled = enabled) }
+            }
+        }
+        viewModelScope.launch {
+            preferencesRepository.scheduledRunEnabled.collect { enabled ->
+                _uiState.update { it.copy(scheduledRunEnabled = enabled) }
+                if (enabled) {
+                    DailyAlarmScheduler.scheduleAll(application)
+                } else {
+                    DailyAlarmScheduler.cancelAll(application)
+                }
             }
         }
         viewModelScope.launch {
@@ -128,6 +147,39 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch { preferencesRepository.saveAppLanguage(next) }
     }
 
+    fun setRunOnBootEnabled(enabled: Boolean) {
+        _uiState.update { it.copy(runOnBootEnabled = enabled) }
+        viewModelScope.launch { preferencesRepository.saveRunOnBootEnabled(enabled) }
+    }
+
+    fun setScheduledRunEnabled(enabled: Boolean) {
+        _uiState.update { it.copy(scheduledRunEnabled = enabled) }
+        viewModelScope.launch { preferencesRepository.saveScheduledRunEnabled(enabled) }
+
+        if (!enabled) {
+            DailyAlarmScheduler.cancelAll(getApplication())
+            return
+        }
+
+        if (!DailyAlarmScheduler.scheduleAll(getApplication())) {
+            _events.tryEmit(MainUiEvent.ShowSnackbar(currentStrings().exactAlarmPermissionRequired))
+            _events.tryEmit(MainUiEvent.RequestExactAlarmPermission)
+        }
+    }
+
+    fun onExactAlarmPermissionResult() {
+        if (!_uiState.value.scheduledRunEnabled) return
+        if (!DailyAlarmScheduler.scheduleAll(getApplication())) {
+            _events.tryEmit(MainUiEvent.ShowSnackbar(currentStrings().exactAlarmPermissionRequired))
+        }
+    }
+
+    fun ensureScheduledAlarms() {
+        if (_uiState.value.scheduledRunEnabled) {
+            DailyAlarmScheduler.scheduleAll(getApplication())
+        }
+    }
+
     fun onApplyClicked() {
         if (_uiState.value.isApplying) return
         if (!whitelistRepository.canWrite()) {
@@ -148,6 +200,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun onPermissionLaunchFailed() {
         _events.tryEmit(MainUiEvent.ShowSnackbar(currentStrings().permissionRequired))
+    }
+
+    fun onExactAlarmPermissionLaunchFailed() {
+        _events.tryEmit(MainUiEvent.ShowSnackbar(currentStrings().exactAlarmPermissionRequired))
     }
 
     fun refreshActivationStatuses() {

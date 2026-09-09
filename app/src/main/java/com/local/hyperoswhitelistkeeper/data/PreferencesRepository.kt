@@ -3,6 +3,7 @@ package com.local.hyperoswhitelistkeeper.data
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
@@ -62,7 +63,19 @@ class PreferencesRepository internal constructor(
             .sortedBy { it.label.lowercase() }
     }
 
+    val runOnBootEnabled: Flow<Boolean> = dataStore.data.map { preferences ->
+        preferences[RUN_ON_BOOT_ENABLED] ?: false
+    }
+
+    val scheduledRunEnabled: Flow<Boolean> = dataStore.data.map { preferences ->
+        preferences[SCHEDULED_RUN_ENABLED] ?: false
+    }
+
     suspend fun loadSelectedPackages(): Set<String> = selectedPackages.first()
+
+    suspend fun loadRunOnBootEnabled(): Boolean = runOnBootEnabled.first()
+
+    suspend fun loadScheduledRunEnabled(): Boolean = scheduledRunEnabled.first()
 
     suspend fun saveSelectedPackages(packages: Set<String>) {
         dataStore.edit { preferences ->
@@ -94,10 +107,24 @@ class PreferencesRepository internal constructor(
         }
     }
 
+    suspend fun saveRunOnBootEnabled(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[RUN_ON_BOOT_ENABLED] = enabled
+        }
+    }
+
+    suspend fun saveScheduledRunEnabled(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[SCHEDULED_RUN_ENABLED] = enabled
+        }
+    }
+
     private companion object {
         val SELECTED_PACKAGES = stringSetPreferencesKey("selected_packages")
         val THEME_MODE = stringPreferencesKey("theme_mode")
         val APP_LANGUAGE = stringPreferencesKey("app_language")
         val CUSTOM_APPS = stringSetPreferencesKey("custom_apps")
+        val RUN_ON_BOOT_ENABLED = booleanPreferencesKey("run_on_boot_enabled")
+        val SCHEDULED_RUN_ENABLED = booleanPreferencesKey("scheduled_run_enabled")
     }
 }

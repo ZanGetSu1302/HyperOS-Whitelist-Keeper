@@ -35,6 +35,20 @@ whitelist; hãy nhấn **Áp dụng whitelist** lần nữa.
 
 The heart button in the top bar opens a minimal dialog containing only the Donate QR.
 
+## Tự động kiểm tra và sửa
+
+- Tick **Chạy khi khởi động** để kiểm tra/sửa whitelist một lần sau khi điện thoại
+  hoàn tất khởi động.
+- Tick **Chạy theo lịch** để chạy vào đúng **08:00** và **12:00** mỗi ngày theo
+  giờ local của điện thoại.
+- Android 12 trở lên có thể mở màn hình **Báo thức và lời nhắc**; cần cấp quyền
+  này để AlarmManager đặt lịch exact.
+- Sau reboot, đổi giờ/múi giờ hoặc cập nhật APK, hai lịch được đăng ký lại nếu
+  tùy chọn Scheduled Run đang bật.
+
+Mỗi lượt chỉ gọi logic kiểm tra/sửa hiện có rồi kết thúc; ứng dụng không duy trì
+foreground service và không tạo notification.
+
 ## Cài đặt APK
 
 Android 14 trở lên yêu cầu cài bản tương thích SetEdit bằng ADB:
@@ -60,8 +74,8 @@ ghi trong `Settings.System`.
 - Minimum SDK: 26
 - Compile SDK: 36 (Android 16)
 - Target SDK: 22 (chế độ tương thích SetEdit)
-- Version: `1.6.0-legacy` (`versionCode 7`)
-- Jetpack Compose Material 3, DataStore và WorkManager
+- Version: `1.7.0-legacy` (`versionCode 8`)
+- Jetpack Compose Material 3, DataStore, AlarmManager và WorkManager (migration lịch cũ)
 
 `targetSdk 22` là chủ ý kỹ thuật: Android chặn ứng dụng target API 23+ sửa một
 số khóa System không công khai dù đã cấp `WRITE_SETTINGS`. Ứng dụng dùng cơ chế

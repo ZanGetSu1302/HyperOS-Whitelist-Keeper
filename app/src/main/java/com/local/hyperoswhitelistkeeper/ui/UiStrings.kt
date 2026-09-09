@@ -7,6 +7,10 @@ data class UiStrings(
     val protectedApps: String,
     val selectedApps: (Int) -> String,
     val automaticRepair: String,
+    val runOnBoot: String,
+    val runOnBootDescription: String,
+    val scheduledRun: String,
+    val scheduledRunDescription: String,
     val applying: String,
     val applyWhitelist: String,
     val chooseApps: String,
@@ -31,6 +35,7 @@ data class UiStrings(
     val alreadyApplied: String,
     val permissionRequired: String,
     val updateFailure: String,
+    val exactAlarmPermissionRequired: String,
     val themeDescription: (ThemeMode) -> String,
     val languageButton: String,
     val languageDescription: String,
@@ -46,6 +51,10 @@ fun uiStrings(language: AppLanguage): UiStrings = when (language) {
         protectedApps = "Ứng dụng được bảo vệ",
         selectedApps = { count -> "$count ứng dụng đã chọn" },
         automaticRepair = "Tự động khôi phục whitelist",
+        runOnBoot = "Chạy khi khởi động",
+        runOnBootDescription = "Kiểm tra và sửa một lần sau khi bật máy",
+        scheduledRun = "Chạy theo lịch",
+        scheduledRunDescription = "Mỗi ngày vào đúng 08:00 và 12:00",
         applying = "Đang áp dụng…",
         applyWhitelist = "Áp dụng whitelist",
         chooseApps = "Chọn ứng dụng",
@@ -70,6 +79,7 @@ fun uiStrings(language: AppLanguage): UiStrings = when (language) {
         alreadyApplied = "Whitelist đã được cập nhật trước đó",
         permissionRequired = "Cần quyền sửa cài đặt hệ thống",
         updateFailure = "Không thể cập nhật whitelist",
+        exactAlarmPermissionRequired = "Hãy cho phép Báo thức và lời nhắc để chạy đúng giờ",
         themeDescription = { mode ->
             when (mode) {
                 ThemeMode.SYSTEM -> "Giao diện theo hệ thống. Nhấn để chuyển sang sáng"
@@ -93,6 +103,10 @@ fun uiStrings(language: AppLanguage): UiStrings = when (language) {
         protectedApps = "Protected apps",
         selectedApps = { count -> if (count == 1) "1 app selected" else "$count apps selected" },
         automaticRepair = "Automatically restore whitelist",
+        runOnBoot = "Run on boot",
+        runOnBootDescription = "Check and repair once after the phone starts",
+        scheduledRun = "Scheduled run",
+        scheduledRunDescription = "Every day at exactly 08:00 and 12:00",
         applying = "Applying…",
         applyWhitelist = "Apply whitelist",
         chooseApps = "Choose apps",
@@ -117,6 +131,7 @@ fun uiStrings(language: AppLanguage): UiStrings = when (language) {
         alreadyApplied = "Whitelist was already up to date",
         permissionRequired = "Permission to modify system settings is required",
         updateFailure = "Unable to update whitelist",
+        exactAlarmPermissionRequired = "Allow Alarms & reminders to run at exact times",
         themeDescription = { mode ->
             when (mode) {
                 ThemeMode.SYSTEM -> "System theme. Tap to switch to light"

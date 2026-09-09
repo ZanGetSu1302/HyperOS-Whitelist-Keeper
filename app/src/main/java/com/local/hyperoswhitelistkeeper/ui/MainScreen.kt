@@ -20,10 +20,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
@@ -65,6 +67,8 @@ fun MainScreen(
     onApply: () -> Unit,
     onCycleTheme: () -> Unit,
     onCycleLanguage: () -> Unit,
+    onRunOnBootChanged: (Boolean) -> Unit,
+    onScheduledRunChanged: (Boolean) -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     var showPicker by remember { mutableStateOf(false) }
@@ -148,6 +152,14 @@ fun MainScreen(
                 strings = strings,
                 onClick = { showPicker = true },
             )
+            Spacer(Modifier.height(16.dp))
+            AutomationOptionsCard(
+                runOnBootEnabled = state.runOnBootEnabled,
+                scheduledRunEnabled = state.scheduledRunEnabled,
+                strings = strings,
+                onRunOnBootChanged = onRunOnBootChanged,
+                onScheduledRunChanged = onScheduledRunChanged,
+            )
             Spacer(Modifier.weight(1f))
             Button(
                 onClick = onApply,
@@ -214,6 +226,72 @@ fun MainScreen(
                     Text(strings.guideClose)
                 }
             },
+        )
+    }
+}
+
+@Composable
+private fun AutomationOptionsCard(
+    runOnBootEnabled: Boolean,
+    scheduledRunEnabled: Boolean,
+    strings: UiStrings,
+    onRunOnBootChanged: (Boolean) -> Unit,
+    onScheduledRunChanged: (Boolean) -> Unit,
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+    ) {
+        AutomationOptionRow(
+            title = strings.runOnBoot,
+            description = strings.runOnBootDescription,
+            checked = runOnBootEnabled,
+            onCheckedChange = onRunOnBootChanged,
+        )
+        HorizontalDivider(
+            modifier = Modifier.padding(start = 20.dp),
+            color = MaterialTheme.colorScheme.surfaceVariant,
+        )
+        AutomationOptionRow(
+            title = strings.scheduledRun,
+            description = strings.scheduledRunDescription,
+            checked = scheduledRunEnabled,
+            onCheckedChange = onScheduledRunChanged,
+        )
+    }
+}
+
+@Composable
+private fun AutomationOptionRow(
+    title: String,
+    description: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onCheckedChange(!checked) }
+            .padding(start = 20.dp, end = 8.dp, top = 12.dp, bottom = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Medium,
+            )
+            Text(
+                text = description,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        Checkbox(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
         )
     }
 }
