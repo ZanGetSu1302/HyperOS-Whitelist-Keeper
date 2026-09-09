@@ -8,6 +8,8 @@ object WhitelistLists {
         "MILLET_NO_RESTRICT_APP",
         "power_pkg_white_list",
         "cloud_network_priority_whitelist",
+        "rt_pkg_white_list",
+        "turbo_sched_core_app_list",
     )
     const val processKey = "power_proc_white_list"
 

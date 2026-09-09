@@ -8,6 +8,22 @@ import org.junit.Test
 
 class WhitelistListsTest {
     @Test
+    fun `all supported System Settings are configured`() {
+        assertEquals(
+            listOf(
+                "MILLET_NO_RESTRICT_APP",
+                "power_pkg_white_list",
+                "cloud_network_priority_whitelist",
+                "rt_pkg_white_list",
+                "turbo_sched_core_app_list",
+            ),
+            WhitelistLists.packageKeys,
+        )
+        assertEquals(6, WhitelistLists.packageKeys.size + 1)
+        assertEquals("power_proc_white_list", WhitelistLists.processKey)
+    }
+
+    @Test
     fun `empty value plus GMS returns GMS`() {
         val result = WhitelistLists.merge(null, setOf(GMS))
 

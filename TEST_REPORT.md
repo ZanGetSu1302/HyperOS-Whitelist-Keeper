@@ -1,15 +1,15 @@
 # HyperOS Whitelist Keeper — Báo cáo kiểm thử
 
-Thời điểm kiểm thử: 2026-09-06 (Asia/Saigon).
+Thời điểm kiểm thử: 2026-09-09 (Asia/Saigon).
 
 ## Kết quả build cuối
 
 | Hạng mục | Kết quả | Bằng chứng |
 |---|---|---|
 | Gradle build Debug + Release | PASS | `clean test lintDebug assembleDebug lintRelease assembleRelease`: `BUILD SUCCESSFUL` |
-| Unit tests | PASS | 28 test, 0 failure, 0 error, 0 skipped |
+| Unit tests | PASS | 29 test, 0 failure, 0 error, 0 skipped |
 | Android Lint | PASS | 0 error; 11 cảnh báo dependency/khuyến nghị không chặn build |
-| APK metadata | PASS | package `com.local.hyperoswhitelistkeeper`; minSdk 26; compileSdk 36; targetSdk 22; version `1.7.0-legacy` (8) |
+| APK metadata | PASS | package `com.local.hyperoswhitelistkeeper`; minSdk 26; compileSdk 36; targetSdk 22; version `1.8.0-legacy` (9) |
 | APK release signature | PASS | APK Signature Scheme v2 = true; v3 = true |
 | Android 16 release install/launch | PASS | Cài bằng `--bypass-low-target-sdk-block`; `Status: ok` |
 | Sống sau 5 giây | PASS | PID release vẫn tồn tại sau 5 giây |
@@ -30,19 +30,28 @@ Thiết bị: Xiaomi `25102RKBEC` (`myron`), Android 16, HyperOS OS3.0.
 
 | Chức năng | Kết quả | Chi tiết |
 |---|---|---|
-| Ghi Settings.System không root | PASS | Ba khóa package được cập nhật thật; log `Write result: true` và `Verify: success` |
+| Ghi Settings.System không root | PASS | Ba khóa package gốc được cập nhật thật trên thiết bị HyperOS; hai khóa mới được kiểm tra trên Android 16 AVD |
 | Merge only | PASS | Các mục Xiaomi/ứng dụng đang có được giữ nguyên, mục thiếu được nối cuối |
-| Chống duplicate | PASS | Sau ghi: số phần tử bằng số phần tử unique ở cả ba khóa |
+| Chống duplicate | PASS | Logic merge giữ thứ tự, không thêm trùng; được kiểm tra bằng unit test và đọc lại Settings |
 | Route process | PASS | `com.google.android.gms.persistent` chỉ nằm trong `power_proc_white_list` |
 | Apply lặp lại | PASS | Không ghi lại; UI báo “Whitelist đã được cập nhật trước đó” |
 | Khôi phục thủ công mục bị xóa | PASS | Xóa thử GMS khỏi MILLET, nhấn Apply thêm lại và verify thành công |
 | AlarmManager exact | PASS | Hai alarm `window=0` tại 08:00 và 12:00 giờ local; không nhân đôi sau khi mở lại app |
 
+## Hai System Settings mới
+
+- `rt_pkg_white_list` và `turbo_sched_core_app_list` được đưa vào cùng luồng package của
+  Apply, kiểm tra trạng thái, AlarmReceiver và BootReceiver.
+- Apply trên APK Release Android 16 giữ nguyên giá trị `com.vendor.keep`, bổ sung đủ các
+  package đã chọn vào cả hai khóa và không đưa `com.google.android.gms.persistent` vào nhầm.
+- AlarmReceiver phục hồi package bị xóa khỏi cả hai khóa; reboot APK Release cũng phục hồi
+  thành công và duy trì đúng hai exact alarm.
+
 ## Trạng thái kích hoạt trong app picker
 
-- Khi Activity vào foreground, app đọc một lần cả bốn khóa System và tính trạng thái
+- Khi Activity vào foreground, app đọc một lần cả sáu khóa System và tính trạng thái
   cho toàn bộ catalog.
-- Package chỉ xanh “Đã kích hoạt” khi tồn tại trong đủ ba khóa package.
+- Package chỉ xanh “Đã kích hoạt” khi tồn tại trong đủ năm khóa package.
 - Process chỉ kiểm tra `power_proc_white_list`.
 - Mục thiếu ít nhất một khóa hiện đỏ “Chưa kích hoạt”.
 - Sau Apply, trạng thái được đọc lại tự động.
@@ -66,7 +75,7 @@ Thiết bị: Xiaomi `25102RKBEC` (`myron`), Android 16, HyperOS OS3.0.
 - Package sai định dạng hoặc trùng bị báo lỗi và khóa nút Lưu.
 - App mới được lưu bằng DataStore, tự tick và vẫn tồn tại sau force-stop/mở lại.
 - Kiểm thử APK Release Android 16: tổng lựa chọn tăng từ 8 lên 9; package
-  `com.example.customkeeper` được ghi vào đủ ba whitelist package và trạng thái
+  `com.example.customkeeper` được ghi vào đủ năm whitelist package và trạng thái
   chuyển từ đỏ **Chưa kích hoạt** sang xanh **Đã kích hoạt** sau khi Apply.
 
 ## Hướng dẫn nhanh
@@ -89,6 +98,9 @@ Thiết bị: Xiaomi `25102RKBEC` (`myron`), Android 16, HyperOS OS3.0.
   hai alarm exact xuất hiện lại tại 08:00 và 12:00, không crash.
 - `AlarmReceiver` được gọi dưới UID ứng dụng: package bị xóa được phục hồi, receiver
   kết thúc và vẫn còn đúng hai alarm kế tiếp.
+- APK Release 1.8: xóa thử package khỏi `rt_pkg_white_list` và
+  `turbo_sched_core_app_list`, reboot thật; `BootReceiver` phục hồi cả hai khóa và
+  đăng ký lại đúng hai exact alarm.
 - Nếu giờ trong ngày đã qua, lịch chuyển sang ngày hôm sau. Unit test bao phủ trước
   08:00, đúng 08:00 và khoảng giữa 08:00–12:00.
 - Khi Scheduled Run tắt, hai alarm bị hủy; bật lại chỉ tạo đúng hai PendingIntent
@@ -103,7 +115,7 @@ Thiết bị: Xiaomi `25102RKBEC` (`myron`), Android 16, HyperOS OS3.0.
 Android 14+ chặn cài ứng dụng target cũ theo mặc định. Dùng:
 
 ```text
-adb install --bypass-low-target-sdk-block app-release-qa-signed.apk
+adb install --bypass-low-target-sdk-block HyperOS-Whitelist-Keeper-v1.8.0-legacy.apk
 ```
 
 Không thể update trực tiếp từ bản targetSdk 36 xuống targetSdk 22. Nếu đã cài bản
@@ -112,13 +124,13 @@ không xóa các giá trị whitelist trong `Settings.System`.
 
 ## APK
 
-`app-release-qa-signed.apk` là bản release cài được để kiểm thử, ký bằng Android
+`HyperOS-Whitelist-Keeper-v1.8.0-legacy.apk` là bản release cài được để kiểm thử, ký bằng Android
 debug certificate vì workspace không có keystore production. `app-release-unsigned.apk`
 cần được ký lại bằng keystore do chủ ứng dụng quản lý trước khi phân phối chính thức.
 
-- `app-debug.apk`: 12.505.937 byte; SHA-256
-  `7771C62DC774938F2A7CDE167158E675C7E3C6230B1015639CEB02BD244BF592`.
-- `app-release-qa-signed.apk`: 8.576.327 byte; SHA-256
-  `0D64505651AC90A9CC2CCD8B395829B7C550CEB52E4CB99653E8A1066781A6B2`.
-- `app-release-unsigned.apk`: 8.557.788 byte; SHA-256
-  `CA89BB75DD46AB7493DA63A1B5A6B2665C9AFE6BC3353954BC63A37D3378E6F0`.
+- `app-debug.apk`: 12.505.941 byte; SHA-256
+  `066939BCFF9D225DDC99CB1B36C5BC34AA883611120A76BAEB7C3F088824E7FF`.
+- `HyperOS-Whitelist-Keeper-v1.8.0-legacy.apk`: 8.576.327 byte; SHA-256
+  `BA40CA19B3E423A624C0B9B35881F88FF3FFC52B8B0B3AEA4A848B8ADA951E72`.
+- `app-release-unsigned.apk`: 8.557.792 byte; SHA-256
+  `1725C6D6BDEF696B5D0935CE4DC84CD04CC22899AA06EEBA9D9576C372D96C26`.
