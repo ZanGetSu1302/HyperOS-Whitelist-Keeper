@@ -9,7 +9,7 @@ Thời điểm kiểm thử: 2026-09-09 (Asia/Saigon).
 | Gradle build Debug + Release | PASS | `clean test lintDebug assembleDebug lintRelease assembleRelease`: `BUILD SUCCESSFUL` |
 | Unit tests | PASS | 29 test, 0 failure, 0 error, 0 skipped |
 | Android Lint | PASS | 0 error; 11 cảnh báo dependency/khuyến nghị không chặn build |
-| APK metadata | PASS | package `com.local.hyperoswhitelistkeeper`; minSdk 26; compileSdk 36; targetSdk 22; version `1.8.0-legacy` (9) |
+| APK metadata | PASS | package `com.local.hyperoswhitelistkeeper`; minSdk 26; compileSdk 36; targetSdk 22; version `1.8.0` (9) |
 | APK release signature | PASS | APK Signature Scheme v2 = true; v3 = true |
 | Android 16 release install/launch | PASS | Cài bằng `--bypass-low-target-sdk-block`; `Status: ok` |
 | Sống sau 5 giây | PASS | PID release vẫn tồn tại sau 5 giây |
@@ -115,7 +115,7 @@ Thiết bị: Xiaomi `25102RKBEC` (`myron`), Android 16, HyperOS OS3.0.
 Android 14+ chặn cài ứng dụng target cũ theo mặc định. Dùng:
 
 ```text
-adb install --bypass-low-target-sdk-block HyperOS-Whitelist-Keeper-v1.8.0-legacy.apk
+adb install --bypass-low-target-sdk-block HyperOS-Whitelist-Keeper-v1.8.0.apk
 ```
 
 Không thể update trực tiếp từ bản targetSdk 36 xuống targetSdk 22. Nếu đã cài bản
@@ -124,13 +124,13 @@ không xóa các giá trị whitelist trong `Settings.System`.
 
 ## APK
 
-`HyperOS-Whitelist-Keeper-v1.8.0-legacy.apk` là bản release cài được để kiểm thử, ký bằng Android
+`HyperOS-Whitelist-Keeper-v1.8.0.apk` là bản release cài được để kiểm thử, ký bằng Android
 debug certificate vì workspace không có keystore production. `app-release-unsigned.apk`
 cần được ký lại bằng keystore do chủ ứng dụng quản lý trước khi phân phối chính thức.
 
 - `app-debug.apk`: 12.505.941 byte; SHA-256
   `066939BCFF9D225DDC99CB1B36C5BC34AA883611120A76BAEB7C3F088824E7FF`.
-- `HyperOS-Whitelist-Keeper-v1.8.0-legacy.apk`: 8.576.327 byte; SHA-256
-  `BA40CA19B3E423A624C0B9B35881F88FF3FFC52B8B0B3AEA4A848B8ADA951E72`.
+- `HyperOS-Whitelist-Keeper-v1.8.0.apk`: 8.576.327 byte; SHA-256
+  `CBBFA5F5C2AC66086D3552832B126F7F51372EC5006037C71AD7825BAD5310BC`.
 - `app-release-unsigned.apk`: 8.557.792 byte; SHA-256
   `1725C6D6BDEF696B5D0935CE4DC84CD04CC22899AA06EEBA9D9576C372D96C26`.

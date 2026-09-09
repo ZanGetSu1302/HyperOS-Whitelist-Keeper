@@ -54,7 +54,7 @@ foreground service và không tạo notification.
 Android 14 trở lên yêu cầu cài bản tương thích SetEdit bằng ADB:
 
 ```text
-adb install --bypass-low-target-sdk-block HyperOS-Whitelist-Keeper-v1.8.0-legacy.apk
+adb install --bypass-low-target-sdk-block HyperOS-Whitelist-Keeper-v1.8.0.apk
 ```
 
 Nếu thiết bị đang có bản `1.0.0` target SDK 36, cần gỡ bản cũ trước vì Android
@@ -62,7 +62,7 @@ không cho hạ target SDK khi cập nhật trực tiếp:
 
 ```text
 adb uninstall com.local.hyperoswhitelistkeeper
-adb install --bypass-low-target-sdk-block HyperOS-Whitelist-Keeper-v1.8.0-legacy.apk
+adb install --bypass-low-target-sdk-block HyperOS-Whitelist-Keeper-v1.8.0.apk
 ```
 
 Việc gỡ ứng dụng chỉ xóa lựa chọn/theme/ngôn ngữ nội bộ, không xóa whitelist đã
@@ -74,7 +74,7 @@ ghi trong `Settings.System`.
 - Minimum SDK: 26
 - Compile SDK: 36 (Android 16)
 - Target SDK: 22 (chế độ tương thích SetEdit)
-- Version: `1.8.0-legacy` (`versionCode 9`)
+- Version: `1.8.0` (`versionCode 9`)
 - Jetpack Compose Material 3, DataStore, AlarmManager và WorkManager (migration lịch cũ)
 
 `targetSdk 22` là chủ ý kỹ thuật: Android chặn ứng dụng target API 23+ sửa một
@@ -102,4 +102,4 @@ Package phải có trong đủ năm whitelist package mới được báo đã k
 
 APK Debug nằm tại `app/build/outputs/apk/debug/app-debug.apk`. APK Release do
 Gradle tạo ra là unsigned; cần ký bằng keystore của chủ ứng dụng trước khi phát
-hành. `artifacts/HyperOS-Whitelist-Keeper-v1.8.0-legacy.apk` chỉ dùng certificate debug để cài thử.
+hành. `artifacts/HyperOS-Whitelist-Keeper-v1.8.0.apk` chỉ dùng certificate debug để cài thử.

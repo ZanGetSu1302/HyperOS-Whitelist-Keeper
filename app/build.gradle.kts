@@ -14,7 +14,7 @@ android {
         // System settings for apps targeting API 23+, even with WRITE_SETTINGS.
         targetSdk = 22
         versionCode = 9
-        versionName = "1.8.0-legacy"
+        versionName = "1.8.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
