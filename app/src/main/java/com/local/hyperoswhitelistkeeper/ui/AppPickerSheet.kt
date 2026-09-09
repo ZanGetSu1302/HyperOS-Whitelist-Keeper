@@ -21,6 +21,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TriStateCheckbox
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -34,6 +35,7 @@ import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.unit.dp
 import com.local.hyperoswhitelistkeeper.model.AppEntry
 import com.local.hyperoswhitelistkeeper.data.AppCatalog
@@ -49,6 +51,7 @@ fun AppPickerSheet(
     isCheckingActivation: Boolean,
     strings: UiStrings,
     onToggle: (String, Boolean) -> Unit,
+    onSelectAll: (Boolean) -> Unit,
     onAddCustomApp: (String, String) -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -83,6 +86,11 @@ fun AppPickerSheet(
     }
     val other = filtered.filterNot { it.id in selectedIds }.sortedWith { a, b ->
         collator.compare(a.label, b.label)
+    }
+    val selectAllState = when {
+        entries.isNotEmpty() && entries.all { it.id in selectedIds } -> ToggleableState.On
+        entries.any { it.id in selectedIds } -> ToggleableState.Indeterminate
+        else -> ToggleableState.Off
     }
 
     // Material 3's Android sheet window derives its system-bar icons from
@@ -134,6 +142,12 @@ fun AppPickerSheet(
             ) {
                 Text(strings.addApp)
             }
+            SelectAllRow(
+                state = selectAllState,
+                title = strings.selectAll,
+                enabled = entries.isNotEmpty(),
+                onClick = { onSelectAll(selectAllState != ToggleableState.On) },
+            )
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -241,6 +255,37 @@ fun AppPickerSheet(
             },
         )
     }
+}
+
+@Composable
+private fun SelectAllRow(
+    state: ToggleableState,
+    title: String,
+    enabled: Boolean,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(enabled = enabled, onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        TriStateCheckbox(
+            state = state,
+            onClick = onClick,
+            enabled = enabled,
+        )
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.padding(start = 8.dp),
+        )
+    }
+    HorizontalDivider(
+        color = MaterialTheme.colorScheme.surfaceVariant,
+    )
 }
 
 @Composable

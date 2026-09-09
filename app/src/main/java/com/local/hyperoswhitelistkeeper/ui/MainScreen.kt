@@ -63,6 +63,7 @@ fun MainScreen(
     state: MainUiState,
     events: Flow<MainUiEvent>,
     onToggleEntry: (String, Boolean) -> Unit,
+    onSelectAll: (Boolean) -> Unit,
     onAddCustomApp: (String, String) -> Unit,
     onApply: () -> Unit,
     onCycleTheme: () -> Unit,
@@ -197,6 +198,7 @@ fun MainScreen(
             isCheckingActivation = state.isCheckingActivation,
             strings = strings,
             onToggle = onToggleEntry,
+            onSelectAll = onSelectAll,
             onAddCustomApp = onAddCustomApp,
             onDismiss = { showPicker = false },
         )

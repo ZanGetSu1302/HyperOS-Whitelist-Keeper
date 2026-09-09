@@ -16,8 +16,8 @@ trạng thái kích hoạt khi mở ứng dụng.
 
 1. Cài **Carrier Services** từ CH Play.
 2. Bật **Tự khởi động (Auto Start)** cho các ứng dụng cần thiết.
-3. Mở Whitelist Keeper và tick các ứng dụng cần bảo vệ. Có thể nhấn **+ Thêm ứng dụng**
-   để nhập thủ công Tên Package và Tên App chưa có trong danh sách.
+3. Mở Whitelist Keeper và tick các ứng dụng cần bảo vệ. Dùng **Chọn tất cả** để chọn/bỏ
+   chọn toàn bộ, hoặc nhấn **+ Thêm ứng dụng** để nhập thủ công Tên Package và Tên App.
 4. Nhấn **Áp dụng whitelist**. Trạng thái xanh **Đã kích hoạt** là hoàn tất.
 
 Nút `EN/VN`, trợ giúp `?` và đổi giao diện sáng/tối nằm trên thanh trên cùng.
@@ -29,8 +29,8 @@ whitelist; hãy nhấn **Áp dụng whitelist** lần nữa.
 
 1. Install **Carrier Services** from Google Play.
 2. Enable **Auto Start** for the required apps.
-3. Select the apps you want to protect. Use **+ Add app** to enter an app name and
-   package name manually when it is not already listed.
+3. Select the apps you want to protect. Use **Select all** to select/clear the entire
+   list, or **+ Add app** to enter an app name and package name manually.
 4. Tap **Apply whitelist**. Green **Activated** means setup is complete.
 
 The heart button in the top bar opens a minimal dialog containing only the Donate QR.
@@ -54,7 +54,7 @@ foreground service và không tạo notification.
 Android 14 trở lên yêu cầu cài bản tương thích SetEdit bằng ADB:
 
 ```text
-adb install --bypass-low-target-sdk-block HyperOS-Whitelist-Keeper-v1.8.0.apk
+adb install --bypass-low-target-sdk-block HyperOS-Whitelist-Keeper-v1.9.0.apk
 ```
 
 Nếu thiết bị đang có bản `1.0.0` target SDK 36, cần gỡ bản cũ trước vì Android
@@ -62,7 +62,7 @@ không cho hạ target SDK khi cập nhật trực tiếp:
 
 ```text
 adb uninstall com.local.hyperoswhitelistkeeper
-adb install --bypass-low-target-sdk-block HyperOS-Whitelist-Keeper-v1.8.0.apk
+adb install --bypass-low-target-sdk-block HyperOS-Whitelist-Keeper-v1.9.0.apk
 ```
 
 Việc gỡ ứng dụng chỉ xóa lựa chọn/theme/ngôn ngữ nội bộ, không xóa whitelist đã
@@ -74,7 +74,7 @@ ghi trong `Settings.System`.
 - Minimum SDK: 26
 - Compile SDK: 36 (Android 16)
 - Target SDK: 22 (chế độ tương thích SetEdit)
-- Version: `1.8.0` (`versionCode 9`)
+- Version: `1.9.0` (`versionCode 10`)
 - Jetpack Compose Material 3, DataStore, AlarmManager và WorkManager (migration lịch cũ)
 
 `targetSdk 22` là chủ ý kỹ thuật: Android chặn ứng dụng target API 23+ sửa một
@@ -102,4 +102,4 @@ Package phải có trong đủ năm whitelist package mới được báo đã k
 
 APK Debug nằm tại `app/build/outputs/apk/debug/app-debug.apk`. APK Release do
 Gradle tạo ra là unsigned; cần ký bằng keystore của chủ ứng dụng trước khi phát
-hành. `artifacts/HyperOS-Whitelist-Keeper-v1.8.0.apk` chỉ dùng certificate debug để cài thử.
+hành. `artifacts/HyperOS-Whitelist-Keeper-v1.9.0.apk` chỉ dùng certificate debug để cài thử.

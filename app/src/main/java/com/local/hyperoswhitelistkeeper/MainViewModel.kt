@@ -109,6 +109,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         selectionSaves.trySend(updated)
     }
 
+    fun setAllSelected(selected: Boolean) {
+        val updated = if (selected) {
+            _uiState.value.entries.mapTo(linkedSetOf(), AppEntry::id)
+        } else {
+            emptySet()
+        }
+        _uiState.update { it.copy(selectedPackages = updated) }
+        selectionSaves.trySend(updated)
+    }
+
     fun addCustomApp(packageName: String, appName: String) {
         val normalizedPackage = packageName.trim()
         val normalizedName = appName.trim()

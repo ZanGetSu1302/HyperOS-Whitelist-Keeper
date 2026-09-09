@@ -37,4 +37,10 @@ class UiStringsTest {
         assertTrue(en.runOnBoot.contains("boot"))
         assertTrue(en.scheduledRunDescription.contains("08:00") && en.scheduledRunDescription.contains("12:00"))
     }
+
+    @Test
+    fun `Select all has Vietnamese and English labels`() {
+        assertTrue(uiStrings(AppLanguage.VI).selectAll == "Chọn tất cả")
+        assertTrue(uiStrings(AppLanguage.EN).selectAll == "Select all")
+    }
 }
